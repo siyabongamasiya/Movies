@@ -24,6 +24,7 @@ import media.project.movies.Presentation.MoviesListScreen.DrawMoviesList
 import media.project.movies.Presentation.MoviesListScreen.MoviesListViewModel
 import media.project.movies.Presentation.SplashScreen.DrawSplashScreen
 import media.project.movies.ui.theme.MoviesTheme
+import java.util.LinkedList
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {

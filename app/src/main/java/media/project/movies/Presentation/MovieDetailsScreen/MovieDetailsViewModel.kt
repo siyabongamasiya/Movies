@@ -1,6 +1,7 @@
 package media.project.movies.Presentation.MovieDetailsScreen
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
@@ -24,11 +25,15 @@ class MovieDetailsViewModel @Inject constructor(val getLocalMovieById: GetLocalM
     val movie = _movie.asStateFlow()
 
     fun getMovie(id : Int,context: Context){
-        viewModelScope.launch {
-            val response = getLocalMovieById.invoke(id,context)
-            withContext(Dispatchers.Main){
-                _movie.value = response.contents[id]
+        try {
+            viewModelScope.launch {
+                val response = getLocalMovieById.invoke(id, context)
+                withContext(Dispatchers.Main) {
+                    _movie.value = response.contents[id]
+                }
             }
+        }catch (exception : Exception){
+            Log.d("moviedetails viewmodel", exception.message.toString())
         }
 
     }

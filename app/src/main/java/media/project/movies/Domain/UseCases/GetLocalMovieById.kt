@@ -8,7 +8,7 @@ import javax.inject.Inject
 
 class GetLocalMovieById @Inject constructor() {
 
-    suspend operator fun invoke(id : Int,context: Context) : Response{
+    operator fun invoke(id : Int,context: Context) : Response{
         //get movie object with id that was saved in preference from remote
         val sharedPreference = context.getSharedPreferences(Constants.StorageName.con,Context.MODE_PRIVATE)
         val json = sharedPreference.getString(Constants.KeyName.con,"Null")

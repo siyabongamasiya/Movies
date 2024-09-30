@@ -37,19 +37,23 @@ class MoviesListViewModel @Inject constructor(val useCaseBundle: UseCaseBundle) 
 
 
     fun initialSearch(context: Context){
-        //if there is no search going on and the initial launch has not been made do the search else do nothing
+        //if initial launch has not been made do the search else do nothing
         // (done in order to avoid re-initializing on navigate back)
-        if (!_isSearching.value && !Searched.value) {
-            viewModelScope.launch {
-                _isSearching.value = true
-                val response = useCaseBundle.getMovies("Avengers")
-                useCaseBundle.prepareMovies.invoke(response)
-                _response.value = response
+        try {
+            if (!Searched.value) {
+                viewModelScope.launch {
+                    _isSearching.value = true
+                    val response = useCaseBundle.getMovies("Avengers")
+                    useCaseBundle.prepareMovies.invoke(response)
+                    _response.value = response
 
-                useCaseBundle.saveResponse(response,context)
-                _isSearching.value = false
-                Searched.value = true
+                    useCaseBundle.saveResponse(response, context)
+                    _isSearching.value = false
+                    Searched.value = true
+                }
             }
+        }catch (exception : Exception){
+            Log.d("movieslist viewmodel", exception.message.toString())
         }
     }
 
