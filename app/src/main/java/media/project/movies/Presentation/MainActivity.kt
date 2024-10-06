@@ -1,30 +1,22 @@
 package media.project.movies.Presentation
 
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import dagger.hilt.android.AndroidEntryPoint
+import media.project.movies.Constants.ViewModelModes
 import media.project.movies.Presentation.MovieDetailsScreen.DrawMovieDetailsScreen
 import media.project.movies.Presentation.MovieDetailsScreen.MovieDetailsViewModel
 import media.project.movies.Presentation.MoviesListScreen.DrawMoviesList
 import media.project.movies.Presentation.MoviesListScreen.MoviesListViewModel
 import media.project.movies.Presentation.SplashScreen.DrawSplashScreen
-import media.project.movies.ui.theme.MoviesTheme
-import java.util.LinkedList
+import media.project.movies.Utils.ViewModelFactory
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -32,14 +24,17 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         //enableEdgeToEdge()
         setContent {
-            DrawApp()
+            val navHostController = rememberNavController()
+            val viewModelFactory = ViewModelFactory(ViewModelModes.Real.name)
+            DrawApp(navHostController,viewModelFactory)
         }
     }
 }
 
 @Composable
-fun DrawApp(){
-    val navHostController = rememberNavController()
+fun DrawApp(navHostController: NavHostController,viewModelFactory: ViewModelFactory){
+    val moviesListViewModel = viewModelFactory.createModel<MoviesListViewModel>(useCaseBundle = null)
+    val movieDetailsViewModel = viewModelFactory.createModel<MovieDetailsViewModel>(useCaseBundle = null)
 
     NavHost(navController = navHostController, "Splash"){
 
@@ -48,13 +43,13 @@ fun DrawApp(){
         }
 
         composable<ScreenDetailHolder.moviesListScreen>{
-            DrawMoviesList(navHostController)
+            DrawMoviesList(navHostController,moviesListViewModel)
         }
 
         composable<ScreenDetailHolder.moviesDetailsScreen>{
             val args = it.toRoute<ScreenDetailHolder.moviesDetailsScreen>()
             val id = args.id
-            DrawMovieDetailsScreen(navHostController,id)
+            DrawMovieDetailsScreen(navHostController,id,movieDetailsViewModel)
         }
     }
 }

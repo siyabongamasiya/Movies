@@ -1,4 +1,4 @@
-package media.project.movies.Domain.Model
+package media.project.movies.Domain.UseCases
 
 import media.project.movies.Data.RepoImpl.RepoImpl
 import media.project.movies.Domain.UseCases.GetMovies

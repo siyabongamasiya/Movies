@@ -1,27 +1,15 @@
 package media.project.movies.Presentation.MoviesListScreen
 
-import android.app.Application
 import android.content.Context
 import android.util.Log
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import media.project.movies.Constants.Constants
-import media.project.movies.Data.RepoImpl.RepoImpl
 import media.project.movies.Domain.Model.Response
-import media.project.movies.Domain.Model.UseCaseBundle
-import media.project.movies.Domain.UseCases.GetMovies
-import media.project.movies.Domain.UseCases.PrepareMovies
-import media.project.movies.Domain.UseCases.SaveResponse
+import media.project.movies.Domain.UseCases.UseCaseBundle
 import javax.inject.Inject
 
 @HiltViewModel
@@ -34,7 +22,6 @@ class MoviesListViewModel @Inject constructor(val useCaseBundle: UseCaseBundle) 
 
     private var _response = MutableStateFlow(Response("", listOf()))
     val response = _response.asStateFlow()
-
 
     fun initialSearch(context: Context){
         //if initial launch has not been made do the search else do nothing
@@ -60,8 +47,9 @@ class MoviesListViewModel @Inject constructor(val useCaseBundle: UseCaseBundle) 
     fun getMovies(search : String,context: Context){
         //get movies on click search button
         try {
-            if (!_isSearching.value && search.isNotEmpty()) {
+            if (search.isNotEmpty()) {
                 viewModelScope.launch {
+                    _isSearching.value = true
                     val response = useCaseBundle.getMovies(search)
                     useCaseBundle.prepareMovies(response)
                     _response.value = response
@@ -73,5 +61,17 @@ class MoviesListViewModel @Inject constructor(val useCaseBundle: UseCaseBundle) 
             Log.d("movieslist viewmodel", e.message.toString())
         }
 
+    }
+
+
+    //test function
+    fun showCircularindicator(){
+        _isSearching.value = true
+    }
+
+
+    //test function
+    fun hideCircularindicator(){
+        _isSearching.value = false
     }
 }

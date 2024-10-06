@@ -35,7 +35,6 @@ class MovieDetailsViewModel @Inject constructor(val getLocalMovieById: GetLocalM
         }catch (exception : Exception){
             Log.d("moviedetails viewmodel", exception.message.toString())
         }
-
     }
 
 }

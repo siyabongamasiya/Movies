@@ -1,6 +1,5 @@
 package media.project.movies.Presentation.MoviesListScreen
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -27,43 +26,38 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
+import media.project.movies.Constants.circularIndicatortesttag
 import media.project.movies.Domain.Model.Movie
 import media.project.movies.Presentation.ScreenDetailHolder
-import media.project.movies.R
 import media.project.movies.ui.theme.MoviesTheme
 
 
 @Composable
-fun DrawMoviesList(navHostController: NavHostController){
-
-    val moviesListViewModel = hiltViewModel<MoviesListViewModel>()
+fun DrawMoviesList(navHostController: NavHostController, moviesListViewModel: MoviesListViewModel?){
 
     //collecting the flag from view model as state
-    val isSearching = moviesListViewModel.isSearching.collectAsState()
+    val isSearching = moviesListViewModel?.isSearching?.collectAsState()
     MoviesTheme {
         Scaffold(bottomBar = {
             //draw bottom section
-            bottomSection(moviesListViewModel,isSearching.value)
+            bottomSection(moviesListViewModel!!,isSearching!!.value)
         }) {paddingValues ->
             //draw middle section
             midSection(navHostController = navHostController,
-                paddingValues = paddingValues,isSearching.value,moviesListViewModel)
+                paddingValues = paddingValues,isSearching!!.value,moviesListViewModel)
         }
     }
 
@@ -131,6 +125,7 @@ fun midSection(navHostController: NavHostController,
     //if there is a current search going on show circular progress else show results
     if (isSearching){
         Box (modifier = Modifier
+            .testTag(circularIndicatortesttag)
             .fillMaxSize(), contentAlignment = Alignment.Center){
             CircularProgressIndicator(color = MaterialTheme.colorScheme.tertiary)
         }

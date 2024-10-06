@@ -2,7 +2,6 @@ package media.project.movies.Presentation.MovieDetailsScreen
 
 import android.content.Intent
 import android.net.Uri
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.Orientation
@@ -28,34 +27,29 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import media.project.movies.Domain.Model.Movie
 import media.project.movies.Presentation.MoviesListScreen.customButton
-import media.project.movies.R
 import media.project.movies.ui.theme.MoviesTheme
 
 
 
 
 @Composable
-fun DrawMovieDetailsScreen(navHostController: NavHostController,
-                           id : Int){
-
-    val movieDetailsViewModel = hiltViewModel<MovieDetailsViewModel>()
+fun DrawMovieDetailsScreen(
+    navHostController: NavHostController,
+    id: Int,
+    movieDetailsViewModel: MovieDetailsViewModel?
+){
 
     MoviesTheme {
         Scaffold(topBar = {
@@ -94,19 +88,19 @@ fun topSectionMovieDetails(navHostController: NavHostController){
 fun midSectionMovieDetails(
                            paddingValues: PaddingValues,
                            id : Int,
-                           movieDetailsViewModel: MovieDetailsViewModel){
-    val movie = movieDetailsViewModel.movie.collectAsState()
+                           movieDetailsViewModel: MovieDetailsViewModel?){
+    val movie = movieDetailsViewModel?.movie?.collectAsState()
 
     val context = LocalContext.current
 
     //get movies from with id passed to screen on initial launch of the screen
     LaunchedEffect(key1 = Unit) {
-        movieDetailsViewModel.getMovie(id,context)
+        movieDetailsViewModel?.getMovie(id,context)
     }
 
     //if id is the default id draw circular progress because actual movie has not been loaded yet
     // else display the movie
-    if (movie.value.id == -1){
+    if (movie?.value?.id == -1){
         Box (modifier = Modifier
             .fillMaxSize(), contentAlignment = Alignment.Center){
             CircularProgressIndicator(color = MaterialTheme.colorScheme.tertiary)
@@ -132,16 +126,18 @@ fun midSectionMovieDetails(
         ) {
             val (movieref) = createRefs()
 
-            movieDetails(modifier = Modifier
-                .fillMaxWidth()
-                .verticalScroll(rememberScrollState())
-                .background(MaterialTheme.colorScheme.secondary, shape = RoundedCornerShape(5))
-                .constrainAs(movieref) {
-                    top.linkTo(parent.top)
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                }, movie.value
-            )
+            movie?.value?.let {
+                movieDetails(modifier = Modifier
+                    .fillMaxWidth()
+                    .verticalScroll(rememberScrollState())
+                    .background(MaterialTheme.colorScheme.secondary, shape = RoundedCornerShape(5))
+                    .constrainAs(movieref) {
+                        top.linkTo(parent.top)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                    }, it
+                )
+            }
         }
     }
 }

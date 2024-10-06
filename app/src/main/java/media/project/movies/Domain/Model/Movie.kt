@@ -5,14 +5,14 @@ import java.math.BigDecimal
 import java.math.RoundingMode
 
 data class Movie(
-    val id : Int,
-    var genres : List<String>,
-    var title : String,
-    val overview : String,
-    val poster_path : String,
+    val id : Int = 0,
+    var genres : List<String> = emptyList(),
+    var title : String = "fake title",
+    val overview : String = "overview",
+    val poster_path : String = "poster path",
     var release_date : String = "not shown",
-    var vote_average : Float,
-    var youtube_trailer : String
+    var vote_average : Float = 1.3f,
+    var youtube_trailer : String = "link"
 ) : java.io.Serializable{
 
     fun getStringGenre() : String{

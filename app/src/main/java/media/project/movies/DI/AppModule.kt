@@ -1,10 +1,13 @@
 package media.project.movies.DI
 
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import media.project.movies.Data.RepoImpl.RepoImpl
 import media.project.movies.Data.Retrofit.MoviesClient
+import media.project.movies.Domain.Repo.Repo
 import media.project.movies.Domain.UseCases.GetLocalMovieById
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -26,4 +29,12 @@ object AppModule {
 
         return retrofit.create(MoviesClient::class.java)
     }
+}
+
+@Module
+@InstallIn(SingletonComponent :: class)
+abstract class AbstractionModule{
+
+    @Binds
+    abstract fun BindRepo(repoImpl: RepoImpl) : Repo
 }
