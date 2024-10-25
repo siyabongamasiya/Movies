@@ -13,3 +13,5 @@ Skills Demonstrated
 4.Glide(Image loading)
 
 5.MVVM
+
+6.Dagger hilt
